@@ -1,0 +1,1 @@
+1. .gitignore - Basically, gitignore tells git kung unsa na files ang i-ignore pag mag-commit na ta sa repo.
