@@ -1,13 +1,14 @@
 // Gikan ni sa package nga express-async-handler. Basically, para di na mag-try catch daw. 
 const asyncHandler = require('express-async-handler')
 const Goal = require('../models/goalModel')
+const User = require('../models/userModel')
 
 // @desc  Get goals.
 // @route GET /api/goals
 // @access Private.
 const getGoals = asyncHandler(async (req, res) => {
     // JSON file jud na usually. 
-    const goals = await Goal.find()
+    const goals = await Goal.find({ user: req.user.id})
     // res.status(200).json({message: 'Get goals'})
     res.status(200).json(goals)
 })
@@ -23,7 +24,8 @@ const setGoals = asyncHandler(async (req, res) => {
         throw new Error('Please add a text field')
     }
     const goal = await Goal.create({
-        text: req.body.text
+        text: req.body.text,
+        user: req.user.id,
     })
     // JSON file jud na usually. 
     // res.status(200).json({message: 'Set goal'})
@@ -42,6 +44,21 @@ const updateGoal = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Goal not found')
     }
+
+    const user = await User.findById(req.user.id)
+
+    // Check for user
+    if(!user) {
+        res.status(401) 
+        throw new Error('User not found')
+    }
+
+    // Make sure the logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
+    }
+
     const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
         new: true
     })
@@ -54,10 +71,24 @@ const updateGoal = asyncHandler(async (req, res) => {
 // @access Private.
 const deleteGoal = asyncHandler(async (req, res) => {
    // JSON file jud na usually. 
-   const goal = await Goal.findById(req.params.id)
-   if(!goal){
+    const goal = await Goal.findById(req.params.id)
+    if(!goal){
     res.status(400)
     throw new Error('Goal not found')
+    }
+
+    const user = await User.findById(req.user.id)
+
+    // Check for user
+    if(!user) {
+        res.status(401) 
+        throw new Error('User not found')
+    }
+
+    // Make sure the logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
     }
 
     // Dili na need tong like sa put/update. 

@@ -3,3 +3,4 @@
 2. Purpose sa controllers - Basically, murag ang essence niya kay instad na mag-add kag other functions didto sa sulod sa route, magbuhat na lang kag some sort of way na naa ra sa gawas ang functions para dili siya hugaw?? Idk. Basta parang ganyan.
 
 3. Middleware functions - gurl clueless gihapon ko. Pero basta hunahunaon na lang nako to as magic nga pag nag-error, diretso sa error handling na function. 
+APPARENTLY: Naga-run jud ang middleware functions during response request cycles (CRUD eme) so mag automatic jud siya.
