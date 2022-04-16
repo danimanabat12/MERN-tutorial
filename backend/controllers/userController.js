@@ -74,13 +74,15 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access Private
 const getMe = asyncHandler(async (req, res) => {
     // Naa tay access sa req.user.id kay na-specify ni sa middleware. Remember, sa route kay gitawag ang middleware before getMe in itself.
-    const {_id, name, email} = await User.findById(req.user.id)
+    // As of 4th part, there's no reason na daw to do this (i.e., find the user by id through request BECAUSE sa middle function pa lang nato, nakuha na nato ang user sa request body. so i-comment out ko lang ni.)
+    // const {_id, name, email} = await User.findById(req.user.id)
 
-    res.status(200).json({
-        id: _id, 
-        name, 
-        email,
-    })
+    // res.status(200).json({
+    //     id: _id, 
+    //     name, 
+    //     email,
+    // })
+    res.statusMessage(200).json(req.user)
 })
 
 // Generate JWT
